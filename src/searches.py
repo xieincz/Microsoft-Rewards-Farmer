@@ -9,7 +9,14 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 
 from src.browser import Browser
+import urllib.parse
 
+
+def proxyedUrl(url: str):
+    def urlEncode(url: str):
+        return urllib.parse.quote(url, safe='')
+
+    return f'https://proxy.xieincz.eu.org/{urlEncode(url)}'
 
 class Searches:
     def __init__(self, browser: Browser):
@@ -21,9 +28,13 @@ class Searches:
         i = 0
         while len(searchTerms) < wordsCount:
             i += 1
-            r = requests.get(
-                f'https://trends.google.com/trends/api/dailytrends?hl={self.browser.localeLang}&ed={(date.today() - timedelta(days=i)).strftime("%Y%m%d")}&geo={self.browser.localeGeo}&ns=15'
-            )
+            url=f'https://trends.google.com/trends/api/dailytrends?hl=en-US&ed={(date.today() - timedelta(days=i)).strftime("%Y%m%d")}&geo=US&ns=15'
+            url=proxyedUrl(url)
+            logging.info(
+                "[BING] "
+                + f"GoogleTrends {url}",
+                )
+            r = requests.get(url)
             trends = json.loads(r.text[6:])
             for topic in trends["default"]["trendingSearchesDays"][0][
                 "trendingSearches"

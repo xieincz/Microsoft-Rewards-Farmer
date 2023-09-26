@@ -1,4 +1,13 @@
 import requests
+import urllib.parse
+
+
+def proxyedUrl(url: str):
+    def urlEncode(url: str):
+        return urllib.parse.quote(url, safe='')
+
+    return f'https://proxy.xieincz.eu.org/{urlEncode(url)}'
+
 
 MAX_LENGTHS = {
     "telegram": 4096,
@@ -18,7 +27,7 @@ class Notifier:
         for type in self.args:
             if len(message) > MAX_LENGTHS[type]:
                 for i in range(0, len(message), MAX_LENGTHS[type]):
-                    self.send(message[i : i + MAX_LENGTHS[type]])
+                    self.send(message[i: i + MAX_LENGTHS[type]])
                 return
             else:
                 getattr(self, type)(message)
@@ -27,7 +36,7 @@ class Notifier:
         token, chat_id = self.args["telegram"]
         url = f"https://api.telegram.org/bot{token}/sendMessage"
         data = {"chat_id": chat_id, "text": message}
-        requests.post(url, data=data)
+        requests.post(proxyedUrl(url), data=data)
 
     def discord(self, message):
         url = self.args["discord"]

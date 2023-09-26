@@ -98,7 +98,7 @@ class Login:
         )
         while True:
             currentUrl = urllib.parse.urlparse(self.webdriver.current_url)
-            if currentUrl.hostname == "www.bing.com" and currentUrl.path == "/":
+            if "bing.com" in currentUrl.hostname and currentUrl.path == "/":
                 time.sleep(3)
                 self.utils.tryDismissBingCookieBanner()
                 with contextlib.suppress(Exception):

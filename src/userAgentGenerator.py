@@ -3,7 +3,14 @@ from typing import Any
 
 import requests
 from requests import HTTPError, Response
+import urllib.parse
 
+
+def proxyedUrl(url: str):
+    def urlEncode(url: str):
+        return urllib.parse.quote(url, safe='')
+
+    return f'https://proxy.xieincz.eu.org/{urlEncode(url)}'
 
 class GenerateUserAgent:
     """A class for generating user agents for Microsoft Rewards Farmer."""
@@ -173,7 +180,7 @@ class GenerateUserAgent:
             str: The latest version of Google Chrome.
         """
         response = self.getWebdriverPage(
-            "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json"
+            proxyedUrl("https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json")
         )
         data = response.json()
         return data["channels"]["Stable"]["version"]
