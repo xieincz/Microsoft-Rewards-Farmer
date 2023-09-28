@@ -4,6 +4,7 @@ import logging
 import logging.handlers as handlers
 import random
 import sys
+import time
 from pathlib import Path
 
 from src import Browser, DailySet, Login, MorePromotions, PunchCards, Searches
@@ -20,6 +21,11 @@ def main():
     notifier = Notifier(args)
     loadedAccounts = setupAccounts()
     for currentAccount in loadedAccounts:
+        tm=random.randint(300,2000)
+        logging.info(
+            f"[INFO] Sleep {tm} seconds."
+        )
+        time.sleep(tm)
         try:
             executeBot(currentAccount, notifier, args)
         except Exception as e:
